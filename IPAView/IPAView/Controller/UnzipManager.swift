@@ -9,8 +9,7 @@ import ZIPFoundation
 
 class UnzipManager : NSObject {
     var progressHandler: ((Double) -> Void)?
-    
-    var registered = false
+    private var progressObservation: NSKeyValueObservation?
 
 
     func getUnzipDirectory()-> URL {
@@ -42,32 +41,23 @@ class UnzipManager : NSObject {
         print("temp dir : \(tempDirectoryURL)")
 
         let progress = Progress(totalUnitCount: 1)
-        progress.addObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted), options: .new, context: nil)
-        registered = true
+        progressObservation = progress.observe(\.fractionCompleted, options: [.initial, .new]) { [weak self] progress, _ in
+            self?.progressHandler?(progress.fractionCompleted)
+        }
 
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 try fileManager.unzipItem(at: sourceURL, to: tempDirectoryURL, progress: progress)
                 DispatchQueue.main.async {
+                    self.progressObservation = nil
                     completion(.success(tempDirectoryURL))
                 }
             } catch {
                 DispatchQueue.main.async {
+                    self.progressObservation = nil
                     completion(.failure(error))
                 }
             }
-        }
-    }
-
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == #keyPath(Progress.fractionCompleted), let progress = object as? Progress {
-            self.progressHandler?(progress.fractionCompleted)
-        }
-    }
-
-    deinit {
-        if registered {
-            self.removeObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted))
         }
     }
 }

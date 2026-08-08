@@ -75,6 +75,48 @@ struct IPAAuditCoreTests {
             try IPAAuditor().audit(extractedArchive: fixture.root)
         }
     }
+
+    @Test("Fat binaries report every slice and reject simulator architectures")
+    func fatBinaryArchitectures() throws {
+        let fixture = try Fixture()
+        defer { fixture.remove() }
+        try fixture.makeApp(info: [
+            "CFBundleIdentifier": "com.example.fat",
+            "CFBundleShortVersionString": "1.0",
+            "CFBundleVersion": "1",
+            "CFBundleExecutable": "Fat"
+        ])
+        var binary = Data([0xca, 0xfe, 0xba, 0xbe, 0, 0, 0, 2])
+        binary.append(contentsOf: [0x01, 0, 0, 0x0c] + Array(repeating: 0, count: 16))
+        binary.append(contentsOf: [0x01, 0, 0, 0x07] + Array(repeating: 0, count: 16))
+        try fixture.write("Fat", data: binary)
+
+        let report = try IPAAuditor().audit(extractedArchive: fixture.root)
+
+        #expect(report.architectures == ["arm64", "x86_64"])
+        #expect(report.findings.map(\.code).contains("simulator-architecture"))
+    }
+
+    @Test("Complete privacy metadata avoids privacy findings")
+    func completePrivacyMetadata() throws {
+        let fixture = try Fixture()
+        defer { fixture.remove() }
+        try fixture.makeApp(info: [
+            "CFBundleIdentifier": "com.example.private",
+            "CFBundleShortVersionString": "1.0",
+            "CFBundleVersion": "1",
+            "CFBundleExecutable": "Private",
+            "NSCameraUsageDescription": "Scan documents selected by the user."
+        ])
+        try fixture.write("Private", data: Data([0xcf, 0xfa, 0xed, 0xfe, 0x0c, 0, 0, 1]))
+        try fixture.write("PrivacyInfo.xcprivacy", bytes: 16)
+
+        let report = try IPAAuditor().audit(extractedArchive: fixture.root)
+
+        #expect(report.hasPrivacyManifest)
+        #expect(!report.findings.map(\.code).contains("missing-privacy-manifest"))
+        #expect(!report.findings.map(\.code).contains("weak-NSCameraUsageDescription"))
+    }
 }
 
 private struct Fixture {

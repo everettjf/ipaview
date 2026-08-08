@@ -10,7 +10,7 @@ import SwiftData
 
 
 struct ContentView: View {
-    @StateObject var sharedModel = SharedModel()
+    @StateObject private var sharedModel = SharedModel()
     
     var body: some View {
         NavigationSplitView {
@@ -19,8 +19,9 @@ struct ContentView: View {
             }
             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
         } detail: {
-            if let itemId = sharedModel.selectedItem {
-                DetailView(item: sharedModel.items.first { $0.id == itemId}! )
+            if let itemId = sharedModel.selectedItem,
+               let item = sharedModel.items.first(where: { $0.id == itemId }) {
+                DetailView(item: item)
             } else {
                 DropView()
             }
@@ -43,7 +44,7 @@ struct ContentView: View {
             
             ToolbarItem(placement: .automatic) {
                 Button(action: showInspector) {
-                    Label("Inspector", systemImage: "sidebar.right")
+                    Label("Audit Report", systemImage: "checklist")
                 }
             }
         }
@@ -53,13 +54,12 @@ struct ContentView: View {
         .onChange(of: sharedModel.fileSearchText) { oldValue, newValue in
             print("on search confirm :  new value \(newValue)")
         }
-        .inspectorColumnWidth(min: 100,ideal: 200, max: 500)
-        .inspector(isPresented: $sharedModel.showInspector) {
+        .sheet(isPresented: $sharedModel.showInspector) {
             InspectorView()
-                .inspectorColumnWidth(min: 350, ideal: 450, max: 600)
                 .environmentObject(sharedModel)
+                .frame(minWidth: 720, idealWidth: 820, minHeight: 520, idealHeight: 620)
         }
-        .frame(minWidth: 600, idealWidth: 800, maxWidth: .infinity, minHeight: 300, idealHeight: 550, maxHeight: .infinity)
+        .frame(minWidth: 600, minHeight: 300)
         .toast(isShowing: $sharedModel.showToast, text: sharedModel.toastMessage)
 
     }
