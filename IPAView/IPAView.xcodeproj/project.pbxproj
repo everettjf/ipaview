@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A10000000000000000000001 /* IPAAuditCore in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000002 /* IPAAuditCore */; };
+		A10000000000000000000003 /* AuditReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* AuditReportView.swift */; };
 		D18C36432B3EF2FC00E5A3D4 /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18C36422B3EF2FC00E5A3D4 /* SharedModel.swift */; };
 		D18C36452B40278000E5A3D4 /* ExploreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18C36442B40278000E5A3D4 /* ExploreManager.swift */; };
 		D18C36472B40331B00E5A3D4 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18C36462B40331B00E5A3D4 /* Utils.swift */; };
@@ -32,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A10000000000000000000004 /* AuditReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuditReportView.swift; sourceTree = "<group>"; };
 		D18C36422B3EF2FC00E5A3D4 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		D18C36442B40278000E5A3D4 /* ExploreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreManager.swift; sourceTree = "<group>"; };
 		D18C36462B40331B00E5A3D4 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -63,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000001 /* IPAAuditCore in Frameworks */,
 				D1D73E362B37DF1E00F6FEBE /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +88,7 @@
 		D18C36402B3EF21200E5A3D4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A10000000000000000000004 /* AuditReportView.swift */,
 				D1E5808B2B37179E002CC9B4 /* ContentView.swift */,
 				D1D73E372B37E17C00F6FEBE /* DetailView.swift */,
 				D1D73E3D2B3870DE00F6FEBE /* DropView.swift */,
@@ -173,6 +178,7 @@
 			);
 			name = IPAView;
 			packageProductDependencies = (
+				A10000000000000000000002 /* IPAAuditCore */,
 				D1D73E352B37DF1E00F6FEBE /* ZIPFoundation */,
 			);
 			productName = IPAView;
@@ -204,6 +210,7 @@
 			);
 			mainGroup = D1E5807D2B37179E002CC9B4;
 			packageReferences = (
+				A10000000000000000000005 /* XCLocalSwiftPackageReference "../Core" */,
 				D1D73E342B37DF1E00F6FEBE /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			productRefGroup = D1E580872B37179E002CC9B4 /* Products */;
@@ -232,6 +239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000003 /* AuditReportView.swift in Sources */,
 				D1D73E3A2B37E19300F6FEBE /* FileItemInfo.swift in Sources */,
 				D1E5808C2B37179E002CC9B4 /* ContentView.swift in Sources */,
 				D18C364B2B40451600E5A3D4 /* RecentFileManager.swift in Sources */,
@@ -469,7 +477,19 @@
 		};
 /* End XCRemoteSwiftPackageReference section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		A10000000000000000000005 /* XCLocalSwiftPackageReference "../Core" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Core;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		A10000000000000000000002 /* IPAAuditCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000005 /* XCLocalSwiftPackageReference "../Core" */;
+			productName = IPAAuditCore;
+		};
 		D1D73E352B37DF1E00F6FEBE /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D1D73E342B37DF1E00F6FEBE /* XCRemoteSwiftPackageReference "ZIPFoundation" */;

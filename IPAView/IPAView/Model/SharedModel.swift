@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import IPAAuditCore
 
 class SharedModel: ObservableObject {
     // toast
@@ -42,6 +43,8 @@ class SharedModel: ObservableObject {
     @Published var showInspector = false
     @Published var inspectItems: [InspectItemInfo] = []
     @Published var selectedInspectItems = Set<InspectItemInfo.ID>()
+    @Published var auditReport: IPAAuditReport?
+    @Published var auditError: String?
     
     // recent files
     @Published var recentFiles: [String] = []
@@ -74,10 +77,19 @@ class SharedModel: ObservableObject {
         
         // inspector
         showInspector = true
-        DispatchQueue.global().async {
+        DispatchQueue.global(qos: .userInitiated).async {
             let results = InspectorManager.analyzeDirectory(at: self.rootUrl)
+            let auditResult = Result { try IPAAuditor().audit(extractedArchive: path) }
             DispatchQueue.main.async {
                 self.inspectItems = results
+                switch auditResult {
+                case .success(let report):
+                    self.auditReport = report
+                    self.auditError = nil
+                case .failure(let error):
+                    self.auditReport = nil
+                    self.auditError = error.localizedDescription
+                }
             }
         }
     }
