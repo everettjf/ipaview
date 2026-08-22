@@ -102,9 +102,9 @@ public struct IPAAuditor: Sendable {
         }.sorted()
         let usage = info.compactMapValues { $0 as? String }.filter { $0.key.hasPrefix("NS") && $0.key.hasSuffix("UsageDescription") }
         let hasPrivacyManifest = relativePaths.contains { $0.hasSuffix("PrivacyInfo.xcprivacy") }
-        let architectures = metadata.executable.map { architectures(at: app.appendingPathComponent($0)) } ?? []
+        let appArchitectures = metadata.executable.map { architectures(at: app.appendingPathComponent($0)) } ?? []
         let signing = signingInfo(at: app.appendingPathComponent("embedded.mobileprovision"))
-        let findings = makeFindings(metadata: metadata, usage: usage, hasPrivacyManifest: hasPrivacyManifest, architectures: architectures, signing: signing)
+        let findings = makeFindings(metadata: metadata, usage: usage, hasPrivacyManifest: hasPrivacyManifest, architectures: appArchitectures, signing: signing)
 
         return IPAAuditReport(
             metadata: metadata,
@@ -115,7 +115,7 @@ public struct IPAAuditor: Sendable {
             localizations: localizations,
             privacyUsageDescriptions: usage,
             hasPrivacyManifest: hasPrivacyManifest,
-            architectures: architectures,
+            architectures: appArchitectures,
             signing: signing,
             findings: findings
         )
