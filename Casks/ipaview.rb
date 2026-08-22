@@ -7,7 +7,7 @@ cask "ipaview" do
   desc "Local audit workbench for iOS IPA archives"
   homepage "https://xnu.app/ipaview/"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
   app "IPAView.app"
 
   zap trash: [
