@@ -8,6 +8,14 @@ IPAView is a local macOS audit workbench for iOS IPA archives. Drop an IPA to in
 
 No archive contents are uploaded. Extraction happens in the app sandbox and cached files are local.
 
+## Install
+
+IPAView is distributed primarily through Homebrew:
+
+```sh
+brew install --cask everettjf/tap/ipaview
+```
+
 ## Verification
 
 ```sh
@@ -16,4 +24,4 @@ swift test
 xcodebuild -project IPAView/IPAView.xcodeproj -scheme IPAView -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build
 ```
 
-[Download from the Mac App Store](https://apps.apple.com/us/app/ipaview-for-dev/id6475201960?mt=12)
+The project is maintained at a low intensity. Contributions and focused fixes are welcome.
